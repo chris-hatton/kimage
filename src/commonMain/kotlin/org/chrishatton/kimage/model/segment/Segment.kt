@@ -1,7 +1,7 @@
-package kimage.model.segment
+package org.chrishatton.kimage.model.segment
 
-import kimage.model.Point
-import java.util.*
+import org.chrishatton.kimage.model.Point
+import kotlin.math.*
 
 class Segment<T>(val data: T, elements: Set<Segel<T>> = emptySet() ) {
 
@@ -43,7 +43,7 @@ class Segment<T>(val data: T, elements: Set<Segel<T>> = emptySet() ) {
 //            )
 //    }
 
-    fun replace( segment: Segment<T> ) {
+    fun replace( segment: Segment<T>) {
         if( segment === this ) {
             return
         }
@@ -63,21 +63,17 @@ class Segment<T>(val data: T, elements: Set<Segel<T>> = emptySet() ) {
                 }
             }
         }
-        return Collections.unmodifiableSet(neighbours)
+        return neighbours.toSet()
     }
 
-    fun adjacentSegments( pattern: Segel.NeighbourPattern ) : Set<Segment<T>> {
-        return neighbours(pattern)
+    fun adjacentSegments( pattern: Segel.NeighbourPattern ) : Set<Segment<T>> = neighbours(pattern)
                 .mapNotNull { it.segment }
                 .toSet()
-    }
 
-    fun countedAdjacentSegments( pattern: Segel.NeighbourPattern ) : Map<Segment<T>,Int> {
-        return neighbours(pattern)
+    fun countedAdjacentSegments( pattern: Segel.NeighbourPattern ) : Map<Segment<T>,Int> = neighbours(pattern)
                 .filter { it.segment != null }
                 .groupBy { it.segment!! }
                 .mapValues { (_,segels) -> segels.count() }
-    }
 
     fun centroid() : Point {
         val segels = segels
@@ -88,13 +84,13 @@ class Segment<T>(val data: T, elements: Set<Segel<T>> = emptySet() ) {
 
     data class Direction( val angle: Double, val magnitude: Double ) {
         fun offset() : Point {
-            return Point( x = (Math.cos(angle) * magnitude).toInt(), y = (Math.sin(angle) * magnitude).toInt())
+            return Point( x = (cos(angle) * magnitude).toInt(), y = (sin(angle) * magnitude).toInt())
         }
     }
 
     fun direction() : Direction {
         val segels = segels
-        val squareLength : Int = Math.sqrt(segels.count().toDouble()).toInt()
+        val squareLength : Int = sqrt(segels.count().toDouble()).toInt()
         val north = Point( 0,-1 )
         val west  = Point(-1, 0 )
         var vertical   : Int = segels.fold( 0 ) { count,segel -> count + if(segel.image?.getOrNull(segel.point + north)?.segment == this) 1 else 0 }
@@ -102,12 +98,12 @@ class Segment<T>(val data: T, elements: Set<Segel<T>> = emptySet() ) {
 
         vertical   -= squareLength
         horizontal -= squareLength
-        val base = Math.min(horizontal,vertical)
+        val base = min(horizontal,vertical)
         vertical += base
         horizontal += base
 
-        val angle     = Math.atan2(vertical.toDouble(),horizontal.toDouble())
-        val magnitude = Math.sqrt( Math.pow(vertical.toDouble(),2.0) + Math.pow(horizontal.toDouble(),2.0) ) * 5
+        val angle     = atan2(vertical.toDouble(),horizontal.toDouble())
+        val magnitude = sqrt( vertical.toDouble().pow(2) + horizontal.toDouble().pow(2) ) * 5
 
         return Direction( angle, magnitude )
     }

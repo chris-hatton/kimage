@@ -1,16 +1,14 @@
-package kimage.process.segment.walk
+package org.chrishatton.kimage.process.segment.walk
 
-import kimage.model.segment.Segel
+import org.chrishatton.kimage.model.segment.Segel
 import kimage.process.ProgressObserver
-import kimage.model.segment.Segment
-import kimage.model.segment.walk.SegmentWalkResult
-
-import java.util.HashMap
+import org.chrishatton.kimage.model.segment.Segment
+import org.chrishatton.kimage.model.segment.walk.SegmentWalkResult
 
 class SegmentWalker<T> {
     inline fun <reified TR : SegmentWalkResult> walkAll(
             segments                  : Set<Segment<T>>,
-            delegate                  : SegmentWalkDelegate<T>,
+            delegate                  : SegmentWalkDelegate<T,TR>,
             noinline progressObserver : ProgressObserver?
     ): Map<Segment<T>, TR> {
         val results = HashMap<Segment<T>, TR>()
@@ -22,7 +20,7 @@ class SegmentWalker<T> {
 
             walkResult = walk(segment, delegate)!!
 
-            results.put(segment, walkResult)
+            results[segment] = walkResult
         }
 
         progressObserver?.invoke(1f)
@@ -30,14 +28,17 @@ class SegmentWalker<T> {
         return results
     }
 
-    inline fun <reified TR : SegmentWalkResult> walk(segment: Segment<T>, delegate: SegmentWalkDelegate<T>): TR? {
+    inline fun <reified TR : SegmentWalkResult> walk(
+            segment  : Segment<T>,
+            delegate : SegmentWalkDelegate<T,TR>
+    ): TR? {
         val result: TR?
 
         if (delegate.shouldBeginWalkAtSegment(segment)) {
             try {
-                result = TR::class.java.newInstance()
+                result = delegate.createResult()
             } catch (e: Exception) {
-                throw RuntimeException("Unknown walk result type: " + TR::class.java.name)
+                throw RuntimeException("Unknown walk result type: " + TR::class.simpleName)
             }
 
             val firstStep = Step(segment, null)
@@ -49,8 +50,11 @@ class SegmentWalker<T> {
         return result
     }
 
-    fun nextWalkStep(currentStep: Step<T>, walkLength: Int, delegate: SegmentWalkDelegate<T>) {
-        var walkLength = walkLength
+    fun <TR> nextWalkStep(
+        currentStep : Step<T>,
+        walkLength  : Int,
+        delegate    : SegmentWalkDelegate<T,TR>
+    ) {
         var nextStep: Step<T>
 
         val adjacentSegments = currentStep.segment.adjacentSegments(Segel.NeighbourPattern.Cross)
@@ -58,8 +62,11 @@ class SegmentWalker<T> {
         for (adjacentSegment in adjacentSegments) {
             if (adjacentSegment !== currentStep.segment) {
                 nextStep = Step(adjacentSegment, currentStep)
-
-                nextWalkStep(nextStep, ++walkLength, delegate)
+                nextWalkStep(
+                    currentStep = nextStep,
+                    walkLength  = walkLength+1,
+                    delegate    = delegate
+                )
             }
         }
     }

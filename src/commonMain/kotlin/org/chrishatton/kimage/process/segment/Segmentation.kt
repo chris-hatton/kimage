@@ -1,12 +1,11 @@
 package kimage.process.segment
 
-import kimage.model.Image
-import kimage.model.KImage
-import kimage.model.pixel.Pixel
-import kimage.model.Point
-import kimage.model.segment.Segel
-import kimage.model.segment.Segment
-import kimage.process.ProgressObserver
+import org.chrishatton.kimage.model.Image
+import org.chrishatton.kimage.model.KImage
+import org.chrishatton.kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.Point
+import org.chrishatton.kimage.model.segment.Segel
+import org.chrishatton.kimage.model.segment.Segment
 
 typealias Segmenter<PixelType,T> = (image: Image<PixelType>, point: Point)-> Segment<T>
 
@@ -21,7 +20,7 @@ typealias NeighbourSegmenter<PixelType,T> = (image: Image<PixelType>, point: Poi
 
 fun <PixelType: Pixel,T> Image<PixelType>.segmentBy(segmenter: NeighbourSegmenter<PixelType, T> ) : KImage<Segel<T>> {
 
-    val segmentCache : MutableMap<Point,Segment<T>> = HashMap()
+    val segmentCache : MutableMap<Point, Segment<T>> = HashMap()
 
     return this.map { _, point -> Segel<T>(point) }.apply {
         forEach { segel,_ ->

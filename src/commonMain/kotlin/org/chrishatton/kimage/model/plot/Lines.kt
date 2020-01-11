@@ -1,13 +1,14 @@
-package kimage.model.plot
+package org.chrishatton.kimage.model.plot
 
-import kimage.model.MutableImage
-import kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.MutableImage
+import org.chrishatton.kimage.model.pixel.Pixel
+import kotlin.math.abs
 
 /**
  * Implementation of Bresenham's line algorithm: https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
  * Ported from: http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
  */
-fun <PixelType: Pixel> MutableImage<PixelType>.drawBresenhamLine( x: Int, y: Int, x2: Int, y2: Int, color: PixelType) {
+fun <PixelType: Pixel> MutableImage<PixelType>.drawBresenhamLine(x: Int, y: Int, x2: Int, y2: Int, color: PixelType) {
     var x = x
     var y = y
     val w = x2 - x
@@ -19,11 +20,11 @@ fun <PixelType: Pixel> MutableImage<PixelType>.drawBresenhamLine( x: Int, y: Int
     if (w < 0) dx1 = -1 else if (w > 0) dx1 = 1
     if (h < 0) dy1 = -1 else if (h > 0) dy1 = 1
     if (w < 0) dx2 = -1 else if (w > 0) dx2 = 1
-    var longest = Math.abs(w)
-    var shortest = Math.abs(h)
+    var longest = abs(w)
+    var shortest = abs(h)
     if (longest <= shortest) {
-        longest = Math.abs(h)
-        shortest = Math.abs(w)
+        longest = abs(h)
+        shortest = abs(w)
         if (h < 0) dy2 = -1 else if (h > 0) dy2 = 1
         dx2 = 0
     }

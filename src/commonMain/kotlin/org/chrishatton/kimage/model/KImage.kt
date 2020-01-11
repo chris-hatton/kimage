@@ -1,6 +1,6 @@
-package kimage.model
+package org.chrishatton.kimage.model
 
-import kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.pixel.Pixel
 
 private typealias MutableList2D<T> = MutableList<MutableList<T>>
 
@@ -17,9 +17,9 @@ class KImage<PixelColor: Pixel> constructor(
 
     init {
         imageData = MutableList(height) { y ->
-            MutableList(width, { x->
-                init(Point(x,y))
-            })
+            MutableList(width) { x->
+                init(Point(x, y))
+            }
         }
     }
 

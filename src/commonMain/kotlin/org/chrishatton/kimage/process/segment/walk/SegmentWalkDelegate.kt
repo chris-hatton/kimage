@@ -1,16 +1,21 @@
-package kimage.process.segment.walk
+package org.chrishatton.kimage.process.segment.walk
 
-interface SegmentWalkDelegate<T> {
+import org.chrishatton.kimage.model.segment.Segment
+import org.chrishatton.kimage.model.segment.walk.SegmentWalk
 
-    fun shouldBeginWalkAtSegment(startSegment: kimage.model.segment.Segment<T>): Boolean
+interface SegmentWalkDelegate<T,TR> {
 
-    fun shouldWalkInto(currentStep: SegmentWalker.Step<T>, segment: kimage.model.segment.Segment<T>): Boolean {
+    fun createResult() : TR
+
+    fun shouldBeginWalkAtSegment(startSegment: Segment<T>): Boolean
+
+    fun shouldWalkInto(currentStep: SegmentWalker.Step<T>, segment: Segment<T>): Boolean {
         return true
     }
 
-    fun didWalkInto(segmentWalk: kimage.model.segment.walk.SegmentWalk<T>, segment: kimage.model.segment.Segment<T>) {
+    fun didWalkInto(segmentWalk: SegmentWalk<T>, segment: Segment<T>) {
         segmentWalk.didVisit(segment)
     }
 
-    fun didEndWalk(segmentWalk: kimage.model.segment.walk.SegmentWalk<T>)
+    fun didEndWalk(segmentWalk: SegmentWalk<T>)
 }

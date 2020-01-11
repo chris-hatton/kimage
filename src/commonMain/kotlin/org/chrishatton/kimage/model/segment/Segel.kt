@@ -1,8 +1,8 @@
-package kimage.model.segment
+package org.chrishatton.kimage.model.segment
 
-import kimage.model.Image
-import kimage.model.pixel.Pixel
-import kimage.model.Point
+import org.chrishatton.kimage.model.Image
+import org.chrishatton.kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.Point
 import kotlin.properties.Delegates
 
 /**

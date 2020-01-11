@@ -1,6 +1,6 @@
-package kimage.model
+package org.chrishatton.kimage.model
 
-import kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.pixel.Pixel
 
 interface MutableImage<PixelType: Pixel> : Image<PixelType> {
 

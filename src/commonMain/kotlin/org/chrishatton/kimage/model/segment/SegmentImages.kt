@@ -1,9 +1,9 @@
-package kimage.model.segment
+package org.chrishatton.kimage.model.segment
 
-import kimage.model.Image
+import org.chrishatton.kimage.model.Image
 import kimage.process.segment.segments
 
-fun <T> Image<Segel<T>>.reduceSegments( merge : (Segment<T>,Segment<T>)->Segment<T>? ) : Set<Segment<T>> {
+fun <T> Image<Segel<T>>.reduceSegments(merge : (Segment<T>, Segment<T>)-> Segment<T>? ) : Set<Segment<T>> {
 
     val segments : Set<Segment<T>> = this.segments()
 
@@ -26,7 +26,7 @@ fun <T> Image<Segel<T>>.reduceSegments( merge : (Segment<T>,Segment<T>)->Segment
     return segments
 }
 
-fun <T> Image<Segel<T>>.reduceSegmentsUntilStable(merge: (Segment<T>, Segment<T>)->Segment<T>?) : Set<Segment<T>> {
+fun <T> Image<Segel<T>>.reduceSegmentsUntilStable(merge: (Segment<T>, Segment<T>)-> Segment<T>?) : Set<Segment<T>> {
 
     var segments : Set<Segment<T>>
     var count : Int? = null
@@ -41,4 +41,4 @@ fun <T> Image<Segel<T>>.reduceSegmentsUntilStable(merge: (Segment<T>, Segment<T>
     return segments
 }
 
-fun <T> dataReduce( a: Segment<T>, b: Segment<T> ) {}
+fun <T> dataReduce(a: Segment<T>, b: Segment<T>) {}

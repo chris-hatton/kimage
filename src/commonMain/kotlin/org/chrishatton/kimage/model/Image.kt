@@ -1,7 +1,7 @@
-package kimage.model
+package org.chrishatton.kimage.model
 
-import kimage.model.pixel.Pixel
-import kimage.process.ProgressObserver
+import org.chrishatton.kimage.model.pixel.Pixel
+import org.chrishatton.kimage.model.pixel.RGB
 
 /**
  * The contract for an immutable Images.
@@ -9,27 +9,29 @@ import kimage.process.ProgressObserver
  */
 interface Image<PixelType: Pixel> {
 
-    companion object {}
+    companion object {
+        fun createEmptyRGB() : Image<RGB> = KImage(width = 0,height = 0) { RGB.black }
+    }
 
     val width  : Int
     val height : Int
 
     operator fun get( x: Int, y: Int ) : PixelType
 
-    operator fun get( point: Point ) : PixelType = get( point.x, point.y )
+    operator fun get( point: Point) : PixelType = get( point.x, point.y )
 
-    fun getOrNull( point: Point ) : PixelType? {
+    fun getOrNull( point: Point) : PixelType? {
         return if( point.x in 0 until width && point.y in 0 until height ) this[point.x,point.y] else null
     }
 
-    fun <MappedPixelType: Pixel> map(function: (pixel:PixelType, point:Point)->MappedPixelType ) : KImage<MappedPixelType> {
+    fun <MappedPixelType: Pixel> map(function: (pixel:PixelType, point: Point)->MappedPixelType ) : KImage<MappedPixelType> {
         return KImage(width,height) { point ->
             val sourcePixel = this[point]
             function(sourcePixel,point)
         }
     }
 
-    fun forEach( function: (PixelType,Point)->Unit ) {
+    fun forEach( function: (PixelType, Point)->Unit ) {
         for(y in 0 until height) {
             for(x in 0 until width) {
                 val point = Point(x,y)

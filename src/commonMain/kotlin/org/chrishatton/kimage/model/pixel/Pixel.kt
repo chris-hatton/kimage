@@ -1,4 +1,4 @@
-package kimage.model.pixel
+package org.chrishatton.kimage.model.pixel
 
 interface Pixel
 

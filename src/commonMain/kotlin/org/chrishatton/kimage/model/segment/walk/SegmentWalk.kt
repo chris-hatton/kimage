@@ -1,12 +1,12 @@
-package kimage.model.segment.walk
+package org.chrishatton.kimage.model.segment.walk
 
-import kimage.model.segment.Segment
+import org.chrishatton.kimage.model.segment.Segment
 
 open class SegmentWalk<T> {
 
-    internal var path: MutableList<kimage.model.segment.Segment<T>> = java.util.ArrayList<Segment<T>>()
+    internal var path: MutableList<Segment<T>> = mutableListOf<Segment<T>>()
 
-    fun didVisit(segment: kimage.model.segment.Segment<T>) {
+    fun didVisit(segment: Segment<T>) {
         path.add(segment)
     }
 }
